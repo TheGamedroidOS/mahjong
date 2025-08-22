@@ -1,0 +1,20 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "./out-tsc/app",
+    "types": ["hammerjs"]
+  },
+	"files": [
+		"src/main.ts",
+		"src/polyfills.ts"
+	],
+	"include": [
+		"src/**/*.ts"
+	],
+  "exclude": [
+		"src/**/*.worker.ts",
+		"src/environments/environment.prod.ts",
+		"src/environments/environment.capacitor.ts",
+		"src/**/*.spec.ts"
+  ]
+}

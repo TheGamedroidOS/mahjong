@@ -1,0 +1,25 @@
+<div class="top">
+	<div class="help">
+		<h2>{{ 'HOW_TO_PLAY'|translate }}</h2>
+		<p>{{ 'HOW_GOAL'|translate }}</p>
+		<p><b>{{ 'HOW_OPEN'|translate }}</b>: {{ 'HOW_OPEN_DESC'|translate }}</p>
+		<p><b>{{ 'HOW_PAIR'|translate }}</b>: {{ 'HOW_PAIR_DESC'|translate }}</p>
+		<p>{{ 'HOW_DO'|translate }}</p>
+	</div>
+</div>
+<div class="keyboard">
+	<h2>{{ 'SHORTCUTS'|translate }}</h2>
+	<ul class="keyboard-list icon-">
+		@for (shortcut of shortcuts; track shortcut; let i = $index) {
+			<li>
+				<div><span class="key">{{ shortcut.key }}</span>@if (shortcut.icon) {
+					<i [class]="shortcut.icon"></i>
+				}
+					@if (!shortcut.icon) {
+						<span class="icon">🀄️</span>
+					}<span class="name">{{ shortcut.name|translate }}</span></div>
+				<span class="func">{{ (shortcut.name + '_LONG')|translate }}</span>
+			</li>
+		}
+	</ul>
+</div>
