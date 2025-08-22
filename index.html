@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mahjong Solitaire</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <div class="game-container">
+            <!-- Header Controls -->
+            <div class="controls controls-top">
+                <div class="ctrl ctrl-name">
+                    <button class="link button" onclick="game.toggleHelp()" title="Open Help">
+                        <span class="symbol">🀄️</span>
+                        <span class="name">Mahjong Solitaire</span>
+                    </button>
+                </div>
+                <div class="ctrl ctrl-game">
+                    <button class="link button" onclick="game.togglePause()" title="Pause/Resume">
+                        <i class="icon">⏸️</i>
+                        <span class="label">Pause</span>
+                    </button>
+                    <button class="link button feature" onclick="game.shuffle()" title="Shuffle tiles">
+                        <i class="icon">🔄</i>
+                        <span class="label">Shuffle</span>
+                    </button>
+                    <button class="link button feature" onclick="game.undo()" title="Undo last move" id="undoBtn">
+                        <i class="icon">↶</i>
+                        <span class="label">Undo</span>
+                    </button>
+                    <button class="link button feature" onclick="game.hint()" title="Show hint">
+                        <i class="icon">💡</i>
+                        <span class="label">Hint</span>
+                    </button>
+                    <button class="link button" onclick="game.newGame()" title="New Game">
+                        <i class="icon">🔄</i>
+                        <span class="label">New Game</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Game Board -->
+            <div class="board-container">
+                <svg id="gameBoard" class="board-svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+                            <feDropShadow dx="3" dy="3" stdDeviation="2" flood-opacity="0.3"/>
+                        </filter>
+                    </defs>
+                </svg>
+            </div>
+
+            <!-- Bottom Controls -->
+            <div class="controls controls-bottom">
+                <div class="ctrl ctrl-stats">
+                    <button class="link button" onclick="game.toggleSettings()" title="Settings">
+                        <i class="icon">⚙️</i>
+                    </button>
+                    <button class="link button" onclick="game.toggleSound()" title="Toggle Sound" id="soundBtn">
+                        <i class="icon">🔊</i>
+                    </button>
+                    <button class="link button" onclick="game.toggleInfo()" title="Tile Info">
+                        <i class="icon">ℹ️</i>
+                    </button>
+                </div>
+                <div class="ctrl ctrl-time">
+                    <span class="label button text">
+                        <small>Tiles:</small> 
+                        <span id="tileCount">144</span>
+                    </span>
+                    <span class="label button text">
+                        <small>Free:</small> 
+                        <span id="freeCount">4</span>
+                    </span>
+                    <span class="time" id="gameTime">00:00</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Dialogs -->
+        <div id="helpDialog" class="overlay overlay-help hidden">
+            <div class="overlay-popup">
+                <h1>🀄️ How to Play</h1>
+                <button class="close" onclick="game.toggleHelp()">✕</button>
+                <div class="help-content">
+                    <h2>Goal</h2>
+                    <p>Remove all tiles from the board by matching pairs of identical tiles.</p>
+                    
+                    <h2>Rules</h2>
+                    <p><strong>Open tiles:</strong> A tile is open if it has no tiles above it and at least one side (left or right) is free.</p>
+                    <p><strong>Matching:</strong> Two tiles match if they have identical symbols. Flowers and seasons can match within their groups.</p>
+                    
+                    <h2>Keyboard Shortcuts</h2>
+                    <ul class="shortcuts">
+                        <li><kbd>H</kbd> - Help</li>
+                        <li><kbd>P</kbd> - Pause</li>
+                        <li><kbd>U</kbd> - Undo</li>
+                        <li><kbd>T</kbd> - Hint</li>
+                        <li><kbd>N</kbd> - New Game</li>
+                        <li><kbd>M</kbd> - Shuffle</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div id="settingsDialog" class="overlay overlay-settings hidden">
+            <div class="overlay-popup">
+                <h1>🀄️ Settings</h1>
+                <button class="close" onclick="game.toggleSettings()">✕</button>
+                <div class="settings-content">
+                    <div class="setting-group">
+                        <h3>Theme</h3>
+                        <select id="themeSelect" onchange="game.changeTheme(this.value)">
+                            <option value="green">Green</option>
+                            <option value="blue">Blue</option>
+                            <option value="brown">Brown</option>
+                            <option value="dark">Dark</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h3>Layout</h3>
+                        <select id="layoutSelect" onchange="game.changeLayout(this.value)">
+                            <option value="turtle">Turtle</option>
+                            <option value="dragon">Dragon</option>
+                            <option value="castle">Castle</option>
+                            <option value="pyramid">Pyramid</option>
+                        </select>
+                    </div>
+                    
+                    <div class="setting-group">
+                        <h3>Audio</h3>
+                        <label>
+                            <input type="checkbox" id="soundEnabled" onchange="game.toggleSoundSetting(this.checked)">
+                            Enable sounds
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="gameMessage" class="overlay overlay-message hidden">
+            <div class="overlay-popup">
+                <div class="message-content" onclick="game.hideMessage()">
+                    <div id="messageText"></div>
+                    <div id="messageTime"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/tiles.js"></script>
+    <script src="js/layouts.js"></script>
+    <script src="js/board.js"></script>
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
